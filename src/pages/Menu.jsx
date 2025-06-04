@@ -9,9 +9,13 @@ function Menu() {
         <button className="menu-option">
           Análisis de Algoritmo de Coloración de Grafos
         </button>
+
         <button className="menu-option">
-          Análisis de Algoritmo de Partición
+          <Link to="/particion" className="menu-button">
+            Análisis de Algoritmo de Partición
+          </Link>
         </button>
+        
         <button className="menu-option">
           Análisis de Algoritmo de Ciclos Hamiltonianos
         </button>
