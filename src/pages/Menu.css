@@ -1,0 +1,42 @@
+.menu-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #03070c;
+  text-align: center;
+}
+
+.menu-container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #003366;
+}
+
+.menu-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.menu-option {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  background-color: #005baa;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+.menu-button {
+  text-decoration: none;
+}
+
+.menu-option:hover {
+  background-color: #004080;
+}

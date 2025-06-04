@@ -1,0 +1,39 @@
+.particion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0d611ee1;
+}
+
+.particion-container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #0d3a67;
+}
+
+.particion-container p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #fffffb;
+}
+.menu-option-particion {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  background-color: #005baa;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+  text-decoration: none;
+}
+.menu-option-particion:hover {
+  background-color: #004080;
+}
+.menu-button-particion {
+  text-decoration: none;
+  color: #ffffff;
+}
