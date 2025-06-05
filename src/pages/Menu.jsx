@@ -7,7 +7,9 @@ function Menu() {
       <h1>Menú Principal</h1>
       <div className="menu-options">
         <button className="menu-option">
-          Análisis de Algoritmo de Coloración de Grafos
+          <Link to="/coloracion-grafos-comunidad" className="menu-button">
+            Análisis de Algoritmo de Coloración de Grafos
+          </Link>
         </button>
 
         <button className="menu-option">
