@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 function Menu() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Animación de entrada después de la transición
@@ -14,19 +15,22 @@ function Menu() {
       title: "Análisis de Algoritmo de Coloración de Grafos",
       description: "Optimización de estrategias de carrera",
       color: "from-red-500 to-red-700",
-      icon: "🏁"
+      icon: "🏁",
+      path: ""
     },
     {
       title: "Análisis de Algoritmo de Partición", 
       description: "División de sectores de circuito",
       color: "from-blue-500 to-blue-700",
-      icon: "🏎️"
+      icon: "🏎️",
+      path: ""
     },
     {
       title: "Análisis de Algoritmo de Ciclos Hamiltonianos",
       description: "Rutas óptimas de carrera",
       color: "from-purple-500 to-purple-700", 
-      icon: "🏆"
+      icon: "🏆",
+      path: "/hamiltonian-menu"
     }
   ];
 
@@ -67,6 +71,7 @@ function Menu() {
               key={index}
               className={`group relative p-8 rounded-3xl backdrop-blur-lg bg-gradient-to-br ${option.color} bg-opacity-10 border border-white/10 hover:bg-opacity-20 hover:border-white/20 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
               style={{ transitionDelay: `${index * 0.2}s` }}
+              onClick={() => navigate(option.path)}
             >
               {/* Corner decorations */}
               <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-white/30 rounded-tl-2xl"></div>
