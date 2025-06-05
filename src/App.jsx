@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-red-950 to-black">
+    <div className="title min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-red-950 to-black">
 
       {/* Transition overlay with 3D tunnel */}
       {isTransitioning && (
