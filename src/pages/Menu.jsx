@@ -16,7 +16,7 @@ function Menu() {
       description: "Optimización de estrategias de carrera",
       color: "from-red-500 to-red-700",
       icon: "🏁",
-      path: ""
+      path: "/coloracion-grafos-menu" 
     },
     {
       title: "Análisis de Algoritmo de Partición", 
