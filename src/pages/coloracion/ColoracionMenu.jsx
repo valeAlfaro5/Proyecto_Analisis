@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 
-const HamiltonianMenu = () => {
-    const [selectedOption, setSelectedOption] = useState(null);
+const ColoracionMenu = () => {
+    const [selectedOption] = useState(null);
     const [hoveredOption, setHoveredOption] = useState(null);
     const navigate = useNavigate();
 
@@ -21,12 +21,12 @@ const HamiltonianMenu = () => {
             description: 'Implementación personalizada y optimizada del algoritmo coloración de grafos: Voraz',
             icon: '🫟',
             gradient: 'from-blue-300 to-blue-500',
-            path: '/'
+            path: '/coloracion-grafos-propio'
         }
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-400  via-black to-orange-400 flex items-center justify-center p-6">
+        <div className="min-h-screen bg-gradient-to-br from-black  via-orange-600 to-black flex items-center justify-center p-6">
             
             <div className="max-w-4xl w-full">
                 {/* Header */}
@@ -144,4 +144,4 @@ const HamiltonianMenu = () => {
     );
 };
 
-export default HamiltonianMenu;
+export default ColoracionMenu;

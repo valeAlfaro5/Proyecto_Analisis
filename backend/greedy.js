@@ -1,4 +1,4 @@
-export function colorearGrafo(grafo, repeticiones = 1000) {
+export function colorearGrafo(grafo, repeticiones) {
   const inicio = performance.now();
   let colores;
 

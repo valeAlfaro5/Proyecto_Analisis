@@ -54,14 +54,14 @@ export default function ColoracionComunidad() {
   };
 
   const getColor = (colorId) => {
-    const palette = ['#D6380D', '#0D8DD6', '#D6AE0D', '#0DD62B', '#7E11CE', '#800000',
-      '#ff0000', '#ffA500', '#ffff00', '#808000', '#800080', '#ff00ff'];
+    const palette = [ '#00D2BE','#DC0000', '#FF8700', '#1E41FF',  '#006F62', '#0090FF',
+      '#005AFF', '#2B2D42', '#00E701', '#EDEDED', '#800080', '#ff00ff'];
     return palette[(colorId - 1) % palette.length] || '#aaaaaa';
   };
 
   return (
     
-  <div className="flex flex-col items-center justify-center w-screen space-y-4 min-h-screen bg-gradient-to-bl from-white  to-orange-600 text-gray-900 p-6">
+  <div className="flex flex-col items-center justify-center w-screen space-y-4 min-h-screen bg-gradient-to-bl from-blue-400 via-black-400 to-orange-400 text-gray-900 p-6">
 
     <h1 className="font-bold text-3xl text-gray-900 font-Montserrat text-center drop-shadow-md">
     Análisis de Algoritmo de Coloración de Grafos
@@ -72,7 +72,7 @@ export default function ColoracionComunidad() {
     </h2>
 
     <input
-      className="font-Monsterrat border p-2 rounded"
+      className="border p-2 rounded"
       type="file"
       accept=".txt"
       onChange={handleFileChange}
@@ -113,7 +113,7 @@ export default function ColoracionComunidad() {
 //0.038 - 100 aristas
 //0.016 - 85 aristas
 //0.018 - 85 aristas
-//0.0018 - 40 aristas
+//0.0029 - 40 aristas
 
 //tiempos de ejecución promedio de colorearGrafo en n grande
 //n = 500
