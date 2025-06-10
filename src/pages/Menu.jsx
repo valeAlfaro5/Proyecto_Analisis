@@ -23,7 +23,7 @@ function Menu() {
       description: "División de sectores de circuito",
       color: "from-blue-500 to-blue-700",
       icon: "🏎️",
-      path: ""
+      path: "/Particion"
     },
     {
       title: "Análisis de Algoritmo de Ciclos Hamiltonianos",

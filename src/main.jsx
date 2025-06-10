@@ -5,6 +5,9 @@ import './index.css'
 import App from './App.jsx'
 import Menu from './pages/Menu.jsx'
 import Particion from './pages/Particion.jsx';
+import Algoritmo_Propio from './pages/Problem_Partition/Algoritmo_Propio.jsx'
+import Algoritmo_Comunidad from './pages/Problem_Partition/Algoritmo_Comunidad.jsx'
+
 //import ColoracionGrafosComunidad from './pages/ColoracionGrafosComunidad.jsx'
 import HamiltonianMenu from './pages/hamiltonian cycles/HamiltonianMenu.jsx'
 import HamiltonianCommunity from './pages/hamiltonian cycles/HamiltonianCommunity.jsx'
@@ -18,6 +21,8 @@ createRoot(document.getElementById('root')).render(
       {/* <Route path="/coloracion-grafos-comunidad" element={<ColoracionGrafosComunidad/>}/> */}   
       <Route path="/hamiltonian-menu" element={<HamiltonianMenu />}/>
       <Route path='/hamiltonian-community' element={<HamiltonianCommunity />}/>
+      <Route path="/Algoritmo_Propio" element={<Algoritmo_Propio />} />
+      <Route path="/Algoritmo_Comunidad" element={<Algoritmo_Comunidad />} />
     </Routes>
   </BrowserRouter>
 )

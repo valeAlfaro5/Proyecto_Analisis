@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from 'react-router-dom';
 
 const componentsList = [
   { id: 1, name: "Batería", weight: 5 },
@@ -10,7 +9,7 @@ const componentsList = [
   { id: 5, name: "Radiador", weight: 4 },
 ];
 
-export default function F1WeightBalancer() {
+function Algoritmo_Propio() {
   const [leftSide, setLeftSide] = useState([]);
   const [rightSide, setRightSide] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -39,18 +38,18 @@ export default function F1WeightBalancer() {
 
       <div className="flex gap-4 mb-6">
         {componentsList.map((comp) => (
-          <Card
+          <div
             key={comp.id}
-            className={`cursor-pointer transition-transform duration-150 ${
-              selected?.id === comp.id ? "scale-105 bg-blue-100" : ""
+            className={`rounded-lg shadow-md bg-white cursor-pointer transition-transform duration-150 border ${
+              selected?.id === comp.id ? "scale-105 bg-blue-100 border-blue-400" : "border-gray-200"
             }`}
             onClick={() => setSelected(comp)}
           >
-            <CardContent className="p-4 text-center">
+            <div className="p-4 text-center">
               <p className="font-semibold">{comp.name}</p>
               <p className="text-sm">{comp.weight} kg</p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -88,7 +87,14 @@ export default function F1WeightBalancer() {
         </p>
       </div>
 
-      <Button onClick={resetSides}>Resetear distribución</Button>
+      <button
+        className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+        onClick={resetSides}
+      >
+        Resetear distribución
+      </button>
     </div>
   );
 }
+
+export default Algoritmo_Propio;
