@@ -124,7 +124,7 @@ const F1HamiltonianUI = () => {
   };
 
   const formatCycle = (cycle) => {
-    return cycle.map(node => String.fromCharCode(65 + node)).join(' → ');
+    return cycle.map(node => node + 1).join(' → ');
   };
 
   // Función para descargar los resultados en JSON
@@ -136,7 +136,7 @@ const F1HamiltonianUI = () => {
         timestamp: new Date().toISOString(),
         algorithm: "Community Algorithm",
         matrix_size: results.nodes,
-        total_cycles_found: results.count,
+        total_cycles_found: results.totalCycles,
         execution_time_ms: results.time_ms
       },
       cycles: results.cycles.map((cycle, index) => ({
@@ -146,7 +146,7 @@ const F1HamiltonianUI = () => {
         length: cycle.length
       })),
       statistics: {
-        total_cycles: results.count,
+        total_cycles: results.totalCycles,
         nodes_count: results.nodes,
         execution_time: results.time_ms,
         average_cycle_length: results.cycles.length > 0
@@ -280,7 +280,7 @@ const F1HamiltonianUI = () => {
                       <CheckCircle className="w-5 h-5 text-green-400" />
                       <span className="text-sm text-green-300">CICLOS ENCONTRADOS</span>
                     </div>
-                    <div className="text-3xl font-bold text-green-400">{results.count}</div>
+                    <div className="text-3xl font-bold text-green-400">{results.totalCycles}</div>
                   </div>
 
                   <div className="bg-gradient-to-r from-blue-600/20 to-blue-500/20 p-4 rounded-lg border border-blue-500/30">
