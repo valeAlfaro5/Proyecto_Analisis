@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import * as THREE from 'three';
+import { AudioContext } from './context/AudioProvider';
 
 function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -9,6 +10,8 @@ function App() {
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
   const animationRef = useRef(null);
+
+  const { playV10 } = useContext(AudioContext)
 
   useEffect(() => {
     return () => {
@@ -198,38 +201,47 @@ function App() {
     }, 100);
 
     // Sonido de motor V12
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const playEngineSound = () => {
-      const oscillator1 = audioContext.createOscillator();
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+    // const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // const playEngineSound = () => {
+    //   const oscillator1 = audioContext.createOscillator();
+    //   const oscillator2 = audioContext.createOscillator();
+    //   const gainNode = audioContext.createGain();
 
-      oscillator1.connect(gainNode);
-      oscillator2.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+    //   oscillator1.connect(gainNode);
+    //   oscillator2.connect(gainNode);
+    //   gainNode.connect(audioContext.destination);
 
-      oscillator1.frequency.setValueAtTime(80, audioContext.currentTime);
-      oscillator2.frequency.setValueAtTime(120, audioContext.currentTime);
+    //   oscillator1.frequency.setValueAtTime(80, audioContext.currentTime);
+    //   oscillator2.frequency.setValueAtTime(120, audioContext.currentTime);
 
-      oscillator1.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 2);
-      oscillator2.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 2);
+    //   oscillator1.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 2);
+    //   oscillator2.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 2);
 
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.4, audioContext.currentTime + 1);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2.5);
+    //   gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    //   gainNode.gain.exponentialRampToValueAtTime(0.4, audioContext.currentTime + 1);
+    //   gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2.5);
 
-      oscillator1.start();
-      oscillator2.start();
-      oscillator1.stop(audioContext.currentTime + 3);
-      oscillator2.stop(audioContext.currentTime + 3);
-    };
+    //   oscillator1.start();
+    //   oscillator2.start();
+    //   oscillator1.stop(audioContext.currentTime + 3);
+    //   oscillator2.stop(audioContext.currentTime + 3);
+    // };
 
-    playEngineSound();
+    // playEngineSound();
+
+    // const playV10Sound = () => {
+    //   const audio = new Audio('src\\assets\\V10 Sound faded it out.mp4')
+    //   audio.play()
+    // }
+
+    // playV10Sound()
+
+    playV10()
 
     // Navigate after animation
     setTimeout(() => {
       navigate('/menu');
-    }, 3000);
+    }, 4000);
   };
 
   return (

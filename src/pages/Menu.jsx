@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { AudioContext } from '../context/AudioProvider';
 
 function Menu() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate()
 
+  const { playMenu } = useContext(AudioContext)
+
+  // const audio = new Audio('src\\assets\\F1ThemeMusic.mp3')
+
+
   useEffect(() => {
     // Animación de entrada después de la transición
     setTimeout(() => setIsLoaded(true), 100);
+    playMenu();
   }, []);
 
   const menuOptions = [
@@ -16,10 +23,10 @@ function Menu() {
       description: "Optimización de estrategias de carrera",
       color: "from-red-500 to-red-700",
       icon: "🏁",
-      path: "/coloracion-grafos-menu" 
+      path: "/coloracion-grafos-menu"
     },
     {
-      title: "Análisis de Algoritmo de Partición", 
+      title: "Análisis de Algoritmo de Partición",
       description: "División de sectores de circuito",
       color: "from-blue-500 to-blue-700",
       icon: "🏎️",
@@ -28,7 +35,7 @@ function Menu() {
     {
       title: "Análisis de Algoritmo de Ciclos Hamiltonianos",
       description: "Rutas óptimas de carrera",
-      color: "from-purple-500 to-purple-700", 
+      color: "from-purple-500 to-purple-700",
       icon: "🏆",
       path: "/hamiltonian-menu"
     }
@@ -36,7 +43,7 @@ function Menu() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black relative overflow-hidden">
-      
+
       {/* Animated background elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500 rounded-full blur-3xl animate-pulse"></div>
@@ -47,13 +54,13 @@ function Menu() {
       <div className="absolute inset-0 opacity-10">
         <div className="grid grid-cols-12 h-full gap-4">
           {[...Array(12)].map((_, i) => (
-            <div key={i} className="border-l border-white/10 h-full animate-pulse" style={{animationDelay: `${i * 0.1}s`}}></div>
+            <div key={i} className="border-l border-white/10 h-full animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
           ))}
         </div>
       </div>
 
       <div className={`relative z-10 container mx-auto px-6 py-12 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        
+
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-white to-blue-400 mb-6 animate-pulse">
@@ -76,7 +83,7 @@ function Menu() {
               {/* Corner decorations */}
               <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-white/30 rounded-tl-2xl"></div>
               <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-white/30 rounded-br-2xl"></div>
-              
+
               {/* Content */}
               <div className="text-center relative z-10">
                 <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -104,8 +111,8 @@ function Menu() {
 
         {/* Back button */}
         <div className="text-center">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className={`group inline-flex items-center space-x-4 px-8 py-4 text-lg font-bold text-white/80 rounded-full border-2 border-white/20 hover:border-white/40 hover:text-white backdrop-blur-lg bg-white/5 hover:bg-white/10 transition-all duration-500 hover:scale-105 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
             style={{ transitionDelay: '0.8s' }}
           >
@@ -120,7 +127,7 @@ function Menu() {
         <div className="absolute bottom-8 right-8 flex space-x-3">
           {['READY', 'ONLINE', 'ACTIVE'].map((status, i) => (
             <div key={i} className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full bg-green-400 animate-pulse`} style={{animationDelay: `${i * 0.3}s`}}></div>
+              <div className={`w-3 h-3 rounded-full bg-green-400 animate-pulse`} style={{ animationDelay: `${i * 0.3}s` }}></div>
               <span className="text-white/60 text-xs font-mono">{status}</span>
             </div>
           ))}
