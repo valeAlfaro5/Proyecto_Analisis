@@ -1,7 +1,14 @@
 const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const fs = require('fs');
+const { performance } = require('perf_hooks');
 const app = express();
-const cors = require('cors')
+const upload = multer({ dest: 'uploads/' });
 const port = 3000;
+const { colorearGrafo } = require('./greedy');
+const { AlgoritmoVoraz } = require('./voraz');
+
 
 // Middleware para parsear JSON
 app.use(express.json());
@@ -131,7 +138,55 @@ app.post('/hamiltonian-community', (req, res) => {
     }
 });
 
+function leerGrafoDesdeArchivo(ruta) {
+    const contenido = fs.readFileSync(ruta, 'utf-8');
+    const edges = contenido.trim().split('\n').map(linea => {
+        const [from, to] = linea.trim().split(/\s+/).map(Number);
+        return { from, to };
+    });
+    return { edges };
+}
+
+
+//codigo de la comunidad
+app.post('/colorear-grafo', upload.single('archivo'), (req, res) => {
+    // const repeticiones = parseInt(req.query.repeticiones || '1');
+    const archivo = req.file?.path;
+
+    if (!archivo) {
+        return res.status(400).json({ error: 'No se proporcionó archivo .txt' });
+    }
+
+    try {
+        const grafo = leerGrafoDesdeArchivo(archivo);
+        const resultado = colorearGrafo(grafo);
+        fs.unlinkSync(archivo); // Borra archivo temporal
+        res.json({
+            message: "Coloración realizada exitosamente.",
+            ...resultado
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error procesando el archivo del grafo.',
+            detalles: error.message
+        });
+    }
+});
+
+//mi codigo
+app.post('/colorar-mio', (req, res) => {
+  const { nodes, edges } = req.body;
+  if (!nodes || !edges) {
+    return res.status(400).json({ error: 'Faltan nodes o edges' });
+  }
+
+  const resultado = AlgoritmoVoraz(nodes, edges);
+  res.json(resultado);
+});
+
 // Escuchar en el puerto
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
+
+

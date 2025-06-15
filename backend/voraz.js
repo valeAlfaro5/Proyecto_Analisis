@@ -1,15 +1,15 @@
-
-export function AlgoritmoVoraz(nodes, edges) {
+ 
+ function AlgoritmoVoraz(nodes, edges) {
   const inicio = performance.now();
-  const colores = ["#FFF5BA", "#DBFFD6", "#ACE7FF", "#FBE4FF"]; //solo 4 colores, representando las semanas
+  const colores = [ "#FFF5BA" ,"#FBE4FF","#ACE7FF","#DBFFD6" ]; //solo 4 colores, representando las semanas
   const coloracion = {};//inicializar coloracion
+  const grafo ={};
 
-  const grafo ={}
   for (let i = 0; i < nodes.length; i++) {//inicializar grafo
     grafo[nodes[i].id] = [];
   }
 
-  for (let i = 0; i < edges.length; i++) {//llenar grafo
+  for (let i = 0; i < edges.length; i++) {//llenar edges por las predefinidas
     const source = edges[i].source;
     const target = edges[i].target;
     grafo[source].push(target);
@@ -18,7 +18,7 @@ export function AlgoritmoVoraz(nodes, edges) {
 
   for (let v = 0; v < nodes.length; v++) {
     const coloresUsados = new Set();//conjunto para almacenar los colores usados por los vecinos
-    const nodo = nodes[v];
+    const nodo = nodes[v]; 
 
     const nodoActual = grafo[nodo.id];
 
@@ -29,17 +29,15 @@ export function AlgoritmoVoraz(nodes, edges) {
      if(coloracion[vecino] !== undefined) {
         coloresUsados.add(coloracion[vecino]);//si el vecino ya tiene color, agregarlo al conjunto
       }
+       let colorDisponible = "#FFF5BA";
+        for (let k = 0; k < colores.length; k++) {
+          if (!coloresUsados.has(colores[k])) {
+            colorDisponible = colores[k];//buscar el primer color que no esté en el conjunto de colores usados
+            break;
+          }
+        }
+         coloracion[nodo.id] = colorDisponible ;
     }
-
-    let colorDisponible = "#FFF5BA";
-    for (let k = 0; k < colores.length; k++) {
-      if (!coloresUsados.has(colores[k])) {
-        colorDisponible = colores[k];//buscar el primer color que no esté en el conjunto de colores usados
-        break;
-      }
-    }
-
-    coloracion[nodo.id] = colorDisponible ;
 
   }
 
@@ -47,6 +45,8 @@ export function AlgoritmoVoraz(nodes, edges) {
   const tiempo = ((fin - inicio).toFixed(4)); // promedio
   return {tiempo, coloracion};
 }
+
+export { AlgoritmoVoraz };
 
 //si esta vacio - preguntar cuando seleccione un pin si alli quiere iniciar
 //si no esta vacio - preguntar si quiere que ese continue

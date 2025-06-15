@@ -18,7 +18,6 @@ export default function ColoracionComunidad() {
     const resultado = colorearGrafo(grafo, 1000); 
     // setTiempoEjecucion(resultado.tiempo);
 
-
     alert(
       `Colores usados: ${[...new Set(Object.values(resultado.colores))].length}\n` +
       `Tiempo de ejecución: ${resultado.tiempo} ms`
@@ -61,18 +60,18 @@ export default function ColoracionComunidad() {
 
   return (
     
-  <div className="flex flex-col items-center justify-center w-screen space-y-4 min-h-screen bg-gradient-to-bl from-blue-400 via-black-400 to-orange-400 text-gray-900 p-6">
+  <div className="flex flex-col items-center justify-center w-screen space-y-6 min-h-screen bg-gradient-to-bl from-blue-400 via-black-400 to-orange-400 text-gray-900 p-6">
 
-    <h1 className="font-bold text-3xl text-gray-900 font-Montserrat text-center drop-shadow-md">
+    <h1 className="font-bold text-3xl text-gray-900  text-center drop-shadow-md">
     Análisis de Algoritmo de Coloración de Grafos
     </h1>
 
-    <h2 className="font-Montserrat text-xl text-gray-700 mt-2">
+    <h2 className="text-xl text-gray-100 mt-2">
     Sube un grafo en formato .txt:
     </h2>
 
     <input
-      className="border p-2 rounded"
+      className="border p-2 rounded bg-white/80"
       type="file"
       accept=".txt"
       onChange={handleFileChange}
@@ -80,7 +79,7 @@ export default function ColoracionComunidad() {
 
     <div
       ref={containerRef}
-      style={{ width: "95%", height: "500px", border: "1px solid lightgray" }}
+      style={{ width: "95%", height: "500px", border: "2px solid #ffffff33",borderRadius: "12px", background: "#0000010",}}
     ></div>
 
      <div className="text-center mt-5">

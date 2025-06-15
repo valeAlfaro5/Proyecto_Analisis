@@ -1,4 +1,6 @@
-export function colorearGrafo(grafo, repeticiones) {
+// const { performance } = require('perf_hooks');
+
+function colorearGrafo(grafo, repeticiones) {
   const inicio = performance.now();
   let colores;
 
@@ -37,3 +39,5 @@ function ejecutarGreedy(grafo) {
 
   return colores;
 }
+
+export { colorearGrafo };
