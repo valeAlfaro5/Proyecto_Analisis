@@ -10,6 +10,7 @@ import ColoracionMenu from './pages/coloracion/ColoracionMenu.jsx'
 import ColoracionPropio from './pages/coloracion/ColoracionPropio.jsx'
 import HamiltonianMenu from './pages/hamiltonian cycles/HamiltonianMenu.jsx'
 import HamiltonianCommunity from './pages/hamiltonian cycles/HamiltonianCommunity.jsx'
+import HamiltonianOwn from './pages/hamiltonian cycles/HamiltonianOwn.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/coloracion-grafos-propio" element={<ColoracionPropio />} />
       <Route path="/hamiltonian-menu" element={<HamiltonianMenu />}/>
       <Route path='/hamiltonian-community' element={<HamiltonianCommunity />}/>
+      <Route path='/hamiltonian-own' element={<HamiltonianOwn />}/>
     </Routes>
   </BrowserRouter>
 )
