@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Network } from "vis-network/standalone";
 import { Link, useNavigate } from 'react-router';
 import { colorearGrafo } from "@backend/greedy.js";
+import { Play } from "lucide-react";
 
 
 export default function ColoracionComunidad() {
@@ -88,8 +89,8 @@ export default function ColoracionComunidad() {
             className={`group inline-flex items-center space-x-4 px-8 py-4 text-lg font-bold text-white/80 rounded-full border-2 border-black/20 hover:border-white/40 hover:text-white backdrop-blur-lg bg-white/5 hover:bg-white/10 transition-all duration-500 hover:scale-105 'translate-y-0 opacity-100'`}
             style={{ transitionDelay: '0.8s' }}
         >
-            <div className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                <div className="w-0 h-0 border-r-4 border-r-white border-y-2 border-y-transparent mr-1"></div>
+            <div className="w-auto h-auto p-2 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
+              <Play size={14} className="scale-x-[-1]" />
             </div>
             <span className="tracking-wider">Regresar</span>
         </Link>

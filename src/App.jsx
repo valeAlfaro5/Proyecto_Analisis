@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import * as THREE from 'three';
 import { AudioContext } from './context/AudioProvider';
+import { Play } from 'lucide-react';
 
 function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -39,104 +40,134 @@ function App() {
     sceneRef.current = scene;
     rendererRef.current = renderer;
 
-    // Create tunnel particles
-    const particleCount = 1000;
-    const particles = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    const sizes = new Float32Array(particleCount);
+    // Create wind lines
+    const lineCount = 200;
+    const windLines = [];
 
-    // F1 colors: red, white, blue
+    // F1 colors
     const f1Colors = [
-      // new THREE.Color(0xff0000), // Red
-      new THREE.Color(0xffffff), // White  
-      // new THREE.Color(0x0066ff), // Blue
-      // new THREE.Color(0xffaa00), // Orange
+      new THREE.Color(0xffffff), // White
+      // new THREE.Color(0xff4444), // Light Red
+      // new THREE.Color(0x4466ff), // Light Blue
     ];
 
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-
-      // Create tunnel effect - particles in cylindrical distribution
-      const angle = Math.random() * Math.PI * 2;
-      const radius = Math.random() * 5 + 1;
-
-      positions[i3] = Math.cos(angle) * radius;
-      positions[i3 + 1] = Math.sin(angle) * radius;
-      positions[i3 + 2] = (Math.random() - 0.5) * 50;
-
-      // Random F1 colors
-      const color = f1Colors[Math.floor(Math.random() * f1Colors.length)];
-      colors[i3] = color.r;
-      colors[i3 + 1] = color.g;
-      colors[i3 + 2] = color.b;
-
-      sizes[i] = Math.random() * 3 + 1;
-    }
-
-    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-    // Particle material
-    const particleMaterial = new THREE.PointsMaterial({
-      size: 0.1,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending
-    });
-
-    const particleSystem = new THREE.Points(particles, particleMaterial);
-    scene.add(particleSystem);
-
-    // Create speed lines
-    const lineGeometry = new THREE.BufferGeometry();
-    const lineCount = 50;
-    const linePositions = new Float32Array(lineCount * 6); // 2 points per line
-    const lineColors = new Float32Array(lineCount * 6);
-
     for (let i = 0; i < lineCount; i++) {
-      const i6 = i * 6;
+      const geometry = new THREE.BufferGeometry();
+      
+      // Create individual line with multiple segments for more dynamic effect
+      const segments = 30;
+      const positions = new Float32Array((segments + 1) * 3);
+      const colors = new Float32Array((segments + 1) * 3);
+      
+      // Random starting position in tunnel
       const angle = Math.random() * Math.PI * 2;
       const radius = Math.random() * 8 + 2;
-
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-
-      // Line start (far)
-      linePositions[i6] = x;
-      linePositions[i6 + 1] = y;
-      linePositions[i6 + 2] = -30;
-
-      // Line end (near)
-      linePositions[i6 + 3] = x;
-      linePositions[i6 + 4] = y;
-      linePositions[i6 + 5] = 30;
-
-      // Colors (fade from bright to dim)
-      const color = f1Colors[Math.floor(Math.random() * f1Colors.length)];
-      lineColors[i6] = color.r * 0.3;
-      lineColors[i6 + 1] = color.g * 0.3;
-      lineColors[i6 + 2] = color.b * 0.3;
-
-      lineColors[i6 + 3] = color.r;
-      lineColors[i6 + 4] = color.g;
-      lineColors[i6 + 5] = color.b;
+      const baseX = Math.cos(angle) * radius;
+      const baseY = Math.sin(angle) * radius;
+      const startZ = (Math.random() - 0.5) * 100 - 50;
+      
+      // Create wavy line segments
+      for (let j = 0; j <= segments; j++) {
+        const j3 = j * 3;
+        const progress = j / segments;
+        
+        // Add slight wave motion to simulate wind turbulence
+        const waveX = Math.sin(progress * Math.PI * 4) * 0.3;
+        const waveY = Math.cos(progress * Math.PI * 3) * 0.2;
+        
+        positions[j3] = baseX + waveX;
+        positions[j3 + 1] = baseY + waveY;
+        positions[j3 + 2] = startZ + (progress * 8); // Line length
+        
+        // Color gradient along the line
+        const color = f1Colors[Math.floor(Math.random() * f1Colors.length)];
+        const opacity = 1 - progress * 0.7; // Fade towards the back
+        colors[j3] = color.r * opacity;
+        colors[j3 + 1] = color.g * opacity;
+        colors[j3 + 2] = color.b * opacity;
+      }
+      
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      
+      const material = new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: Math.random() * 0.7 + 0.3,
+        blending: THREE.AdditiveBlending,
+        linewidth: 2
+      });
+      
+      const line = new THREE.Line(geometry, material);
+      
+      // Store additional properties for animation
+      line.userData = {
+        speed: Math.random() * 2 + 1,
+        wavePhase: Math.random() * Math.PI * 2,
+        waveSpeed: Math.random() * 0.1 + 0.05,
+        originalAngle: angle,
+        originalRadius: radius
+      };
+      
+      windLines.push(line);
+      scene.add(line);
     }
 
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-    lineGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+    // Create additional horizontal wind streaks
+    const streakCount = 50;
+    const windStreaks = [];
 
-    const lineMaterial = new THREE.LineBasicMaterial({
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending
-    });
-
-    const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(lines);
+    for (let i = 0; i < streakCount; i++) {
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(6); // 2 points
+      const colors = new Float32Array(6);
+      
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.random() * 10 + 1;
+      const y = (Math.random() - 0.5) * 15;
+      const z = (Math.random() - 0.5) * 80;
+      
+      // Horizontal streak
+      positions[0] = Math.cos(angle) * radius;
+      positions[1] = y;
+      positions[2] = z;
+      
+      positions[3] = Math.cos(angle) * (radius + 3);
+      positions[4] = y;
+      positions[5] = z;
+      
+      const color = f1Colors[Math.floor(Math.random() * f1Colors.length)];
+      
+      // Bright start
+      colors[0] = color.r;
+      colors[1] = color.g;
+      colors[2] = color.b;
+      
+      // Fade end
+      colors[3] = color.r * 0.3;
+      colors[4] = color.g * 0.3;
+      colors[5] = color.b * 0.3;
+      
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      
+      const material = new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+      });
+      
+      const streak = new THREE.Line(geometry, material);
+      streak.userData = {
+        speed: Math.random() * 3 + 2,
+        angle: angle,
+        baseRadius: radius
+      };
+      
+      windStreaks.push(streak);
+      scene.add(streak);
+    }
 
     // Camera position
     camera.position.z = 5;
@@ -147,44 +178,86 @@ function App() {
       animationRef.current = requestAnimationFrame(animate);
 
       speed += 0.02;
-      const maxSpeed = 2;
+      const maxSpeed = 3;
       const currentSpeed = Math.min(speed, maxSpeed);
 
-      // Move particles towards camera
-      const positions = particleSystem.geometry.attributes.position.array;
-      for (let i = 0; i < particleCount; i++) {
-        const i3 = i * 3;
-        positions[i3 + 2] += currentSpeed;
-
-        // Reset particles that pass the camera
-        if (positions[i3 + 2] > 10) {
-          positions[i3 + 2] = -40;
-          // Randomize position slightly
-          const angle = Math.random() * Math.PI * 2;
-          const radius = Math.random() * 5 + 1;
-          positions[i3] = Math.cos(angle) * radius;
-          positions[i3 + 1] = Math.sin(angle) * radius;
+      // Animate wind lines
+      windLines.forEach((line, index) => {
+        const positions = line.geometry.attributes.position.array;
+        const userData = line.userData;
+        
+        // Update wave phase for turbulence
+        userData.wavePhase += userData.waveSpeed;
+        
+        // Move entire line forward
+        for (let i = 0; i < positions.length; i += 3) {
+          positions[i + 2] += currentSpeed * userData.speed;
         }
-      }
-
-      // Move lines
-      const linePositions = lines.geometry.attributes.position.array;
-      for (let i = 0; i < lineCount * 2; i++) {
-        const i3 = i * 3;
-        linePositions[i3 + 2] += currentSpeed;
-
-        // Reset lines
-        if (linePositions[i3 + 2] > 30) {
-          linePositions[i3 + 2] -= 60;
+        
+        // Add wave motion
+        for (let i = 0; i < positions.length; i += 3) {
+          const segmentIndex = i / 3;
+          const progress = segmentIndex / 5; // 5 segments
+          
+          const waveX = Math.sin(userData.wavePhase + progress * Math.PI * 4) * 0.3;
+          const waveY = Math.cos(userData.wavePhase + progress * Math.PI * 3) * 0.2;
+          
+          const baseX = Math.cos(userData.originalAngle) * userData.originalRadius;
+          const baseY = Math.sin(userData.originalAngle) * userData.originalRadius;
+          
+          positions[i] = baseX + waveX;
+          positions[i + 1] = baseY + waveY;
         }
-      }
+        
+        // Reset line if it passes the camera
+        if (positions[2] > 20) {
+          for (let i = 0; i < positions.length; i += 3) {
+            positions[i + 2] -= 120;
+          }
+          
+          // Randomize position
+          userData.originalAngle = Math.random() * Math.PI * 2;
+          userData.originalRadius = Math.random() * 8 + 2;
+          userData.wavePhase = Math.random() * Math.PI * 2;
+        }
+        
+        line.geometry.attributes.position.needsUpdate = true;
+      });
 
-      particleSystem.geometry.attributes.position.needsUpdate = true;
-      lines.geometry.attributes.position.needsUpdate = true;
+      // Animate wind streaks
+      windStreaks.forEach((streak) => {
+        const positions = streak.geometry.attributes.position.array;
+        const userData = streak.userData;
+        
+        // Move streak forward
+        positions[2] += currentSpeed * userData.speed;
+        positions[5] += currentSpeed * userData.speed;
+        
+        // Reset if passed camera
+        if (positions[2] > 15) {
+          positions[2] -= 100;
+          positions[5] -= 100;
+          
+          // Randomize position
+          userData.angle = Math.random() * Math.PI * 2;
+          userData.baseRadius = Math.random() * 10 + 1;
+          
+          positions[0] = Math.cos(userData.angle) * userData.baseRadius;
+          positions[3] = Math.cos(userData.angle) * (userData.baseRadius + 3);
+          positions[1] = (Math.random() - 0.5) * 15;
+          positions[4] = positions[1];
+        }
+        
+        streak.geometry.attributes.position.needsUpdate = true;
+      });
 
-      // Camera shake effect
-      camera.position.x = (Math.random() - 0.5) * 0.1 * currentSpeed;
-      camera.position.y = (Math.random() - 0.5) * 0.1 * currentSpeed;
+      // Enhanced camera shake effect
+      const shakeIntensity = currentSpeed * 0.15;
+      camera.position.x = (Math.random() - 0.5) * shakeIntensity;
+      camera.position.y = (Math.random() - 0.5) * shakeIntensity;
+      
+      // Slight rotation for more dynamic feel
+      camera.rotation.z = (Math.random() - 0.5) * 0.02 * currentSpeed;
 
       renderer.render(scene, camera);
     };
@@ -199,42 +272,6 @@ function App() {
     setTimeout(() => {
       createSpeedTunnel();
     }, 100);
-
-    // Sonido de motor V12
-    // const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    // const playEngineSound = () => {
-    //   const oscillator1 = audioContext.createOscillator();
-    //   const oscillator2 = audioContext.createOscillator();
-    //   const gainNode = audioContext.createGain();
-
-    //   oscillator1.connect(gainNode);
-    //   oscillator2.connect(gainNode);
-    //   gainNode.connect(audioContext.destination);
-
-    //   oscillator1.frequency.setValueAtTime(80, audioContext.currentTime);
-    //   oscillator2.frequency.setValueAtTime(120, audioContext.currentTime);
-
-    //   oscillator1.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 2);
-    //   oscillator2.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 2);
-
-    //   gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-    //   gainNode.gain.exponentialRampToValueAtTime(0.4, audioContext.currentTime + 1);
-    //   gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2.5);
-
-    //   oscillator1.start();
-    //   oscillator2.start();
-    //   oscillator1.stop(audioContext.currentTime + 3);
-    //   oscillator2.stop(audioContext.currentTime + 3);
-    // };
-
-    // playEngineSound();
-
-    // const playV10Sound = () => {
-    //   const audio = new Audio('src\\assets\\V10 Sound faded it out.mp4')
-    //   audio.play()
-    // }
-
-    // playV10Sound()
 
     playV10()
 
@@ -322,7 +359,8 @@ function App() {
             FORMULA 1
           </h1>
           <div className="text-lg md:text-xl text-white/80 font-light tracking-wide">
-            CHAMPIONSHIP  TIME EXECUTION ALGORITHM EXPERIENCE
+            <p>CHAMPIONSHIP TIME EXECUTION</p>
+            <p>ALGORITHM EXPERIENCE</p>
           </div>
         </div>
 
@@ -337,9 +375,9 @@ function App() {
             },
             {
               name: "Joe Corrales",
-              color: "from-red-600 to-blue-900",
+              color: "from-red-600 to-slate-900",
               delay: "0.2s",
-              logo: "src/assets/logos/redbulllogo.png",
+              logo: "src/assets/logos/ferrarilogo.svg",
             },
             {
               name: "Harold Diaz",
@@ -353,7 +391,7 @@ function App() {
               className={`group p-6 rounded-2xl backdrop-blur-lg bg-gradient-to-br ${member.color} bg-opacity-20 border border-white/10 hover:bg-opacity-30 transition-all duration-500 hover:scale-105 hover:shadow-2xl`}
               style={{ animationDelay: member.delay }}
             >
-              <div className="text-center">
+              <div className="flex justify-center flex-col text-center">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20 group-hover:scale-110 transition-transform duration-300">
                   <img
                     src={member.logo}
@@ -382,8 +420,8 @@ function App() {
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="relative flex items-center space-x-3">
             <span className="tracking-wider">START ENGINE</span>
-            <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-              <div className="w-0 h-0 border-l-4 border-l-white border-y-2 border-y-transparent ml-1"></div>
+            <div className="w-auto h-auto p-2 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
+              <Play size={14} />
             </div>
           </div>
         </button>
