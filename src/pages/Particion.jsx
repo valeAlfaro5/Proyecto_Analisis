@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import mercedesImg from '/src/assets/logos/Mercedes_img.png';
-import ferrariImg from '/src/assets/logos/Ferrari_image.png';
 import { Play } from 'lucide-react';
 
 const Particion = () => {
