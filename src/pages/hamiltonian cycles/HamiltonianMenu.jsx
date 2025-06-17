@@ -109,7 +109,7 @@ const HamiltonianMenu = () => {
                 {/* Back Button */}
                 <div className="text-center mt-10">
                     <Link
-                        onClick={() => navigate(-1)}
+                       to = "/menu"
                         className={`group inline-flex items-center space-x-4 px-8 py-4 text-lg font-bold text-white rounded-full border-2 border-white/20 hover:border-white/40 hover:text-red-500 bg-white/5 hover:bg-white/10 transition-all duration-500 hover:scale-105`}
                     >
                         <div className="w-auto h-auto p-2 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
