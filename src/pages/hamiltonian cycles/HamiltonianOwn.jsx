@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Zap, Trophy, Clock, Target, GitBranch } from 'lucide-react';
+import { Link } from 'react-router';
 
 const F1HamiltonianUI = () => {
   const [results, setResults] = useState(null);
@@ -37,7 +38,7 @@ const F1HamiltonianUI = () => {
     setLoading(true);
     setError('');
     setResults(null);
-    
+
     try {
       let graphMatrix = null;
 
@@ -113,16 +114,16 @@ const F1HamiltonianUI = () => {
     const ctx = canvas.getContext('2d');
     const width = canvas.width;
     const height = canvas.height;
-    
+
     // Limpiar canvas
     ctx.clearRect(0, 0, width, height);
-    
+
     // Configuración de la pista
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.min(width, height) * 0.35;
     const nodes = results.nodes;
-    
+
     // Calcular posiciones de los nodos en círculo
     const nodePositions = [];
     for (let i = 0; i < nodes; i++) {
@@ -132,7 +133,7 @@ const F1HamiltonianUI = () => {
         y: centerY + radius * Math.sin(angle)
       });
     }
-    
+
     // Obtener la matriz actual (personalizada o por defecto)
     let currentGraph = defaultGraph;
     if (matrix.trim()) {
@@ -143,7 +144,7 @@ const F1HamiltonianUI = () => {
         currentGraph = defaultGraph;
       }
     }
-    
+
     // Dibujar conexiones del grafo (líneas grises)
     ctx.strokeStyle = 'rgba(100, 100, 100, 0.3)';
     ctx.lineWidth = 2;
@@ -157,7 +158,7 @@ const F1HamiltonianUI = () => {
         }
       }
     }
-    
+
     // Dibujar el ciclo seleccionado
     if (results.cycles && results.cycles[selectedCycle]) {
       const cycle = results.cycles[selectedCycle];
@@ -165,17 +166,17 @@ const F1HamiltonianUI = () => {
       gradient.addColorStop(0, '#dc2626');
       gradient.addColorStop(0.5, '#ea580c');
       gradient.addColorStop(1, '#facc15');
-      
+
       ctx.strokeStyle = gradient;
       ctx.lineWidth = 4;
       ctx.shadowColor = '#dc2626';
       ctx.shadowBlur = 10;
-      
+
       ctx.beginPath();
       for (let i = 0; i < cycle.length - 1; i++) {
         const from = nodePositions[cycle[i]];
         const to = nodePositions[cycle[i + 1]];
-        
+
         if (i === 0) {
           ctx.moveTo(from.x, from.y);
         }
@@ -184,7 +185,7 @@ const F1HamiltonianUI = () => {
       ctx.stroke();
       ctx.shadowBlur = 0;
     }
-    
+
     // Dibujar nodos
     nodePositions.forEach((pos, i) => {
       // Nodo base
@@ -195,14 +196,14 @@ const F1HamiltonianUI = () => {
       ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
       ctx.fill();
       ctx.stroke();
-      
+
       // Número del nodo
       ctx.fillStyle = '#facc15';
       ctx.font = 'bold 16px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(i.toString(), pos.x, pos.y);
-      
+
       // Efecto especial para Lewis Hamilton (nodo 44 % nodes)
       if (i === 44 % nodes) {
         ctx.strokeStyle = '#dc2626';
@@ -231,7 +232,7 @@ const F1HamiltonianUI = () => {
         canvas.height = 400;
         drawTrackVisualization();
       };
-      
+
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
       return () => window.removeEventListener('resize', resizeCanvas);
@@ -270,7 +271,7 @@ const F1HamiltonianUI = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        
+
         {/* Control Panel */}
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400/20">
           <div className="flex items-center justify-between mb-6">
@@ -323,7 +324,7 @@ const F1HamiltonianUI = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Examples */}
             <div className="flex flex-wrap gap-2">
               <button
@@ -361,7 +362,7 @@ const F1HamiltonianUI = () => {
         {/* Results Dashboard */}
         {results && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+
             {/* Statistics Panel */}
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400/20">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center">
@@ -402,11 +403,10 @@ const F1HamiltonianUI = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedCycle(index)}
-                    className={`w-full text-left p-4 rounded-xl transition-all duration-300 border ${
-                      selectedCycle === index
+                    className={`w-full text-left p-4 rounded-xl transition-all duration-300 border ${selectedCycle === index
                         ? 'bg-gradient-to-r from-red-600/30 to-yellow-600/30 border-yellow-400/50 text-yellow-400'
                         : 'bg-gray-700/30 border-gray-600/30 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500/50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-sm">
@@ -457,7 +457,17 @@ const F1HamiltonianUI = () => {
             <div className="text-gray-300 italic">"Still We Rise" - Finding the fastest paths through every circuit</div>
           </div>
         </div>
-
+        <div className="text-center mt-10">
+          <Link
+            to="/hamiltonian-menu"
+            className={`group inline-flex items-center space-x-4 px-8 py-4 text-lg font-bold text-white rounded-full border-2 border-white/20 hover:border-white/40 hover:text-red-300 bg-white/5 hover:bg-white/10 transition-all duration-500 hover:scale-105`}
+          >
+            <div className="w-auto h-auto p-2 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
+              <Play size={14} className="scale-x-[-1]" />
+            </div>
+            <span className="tracking-wider">Back</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
