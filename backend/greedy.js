@@ -1,15 +1,9 @@
-// const { performance } = require('perf_hooks');
 
-function colorearGrafo(grafo, repeticiones) {
+ function colorearGrafo(grafo) {
   const inicio = performance.now();
-  let colores;
-
-  for (let i = 0; i < repeticiones; i++) {
-    colores = ejecutarGreedy(grafo);
-  }
-
+  let colores = ejecutarGreedy(grafo);
   const fin = performance.now();
-  const tiempo = ((fin - inicio) / repeticiones).toFixed(3); // promedio
+  const tiempo = ((fin - inicio)).toFixed(4); // promedio
 
   return { colores, tiempo };
 }
@@ -40,4 +34,5 @@ function ejecutarGreedy(grafo) {
   return colores;
 }
 
+// module.exports = { colorearGrafo };
 export { colorearGrafo };
