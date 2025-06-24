@@ -1,25 +1,24 @@
- 
  function AlgoritmoVoraz(nodes, edges) {
   const inicio = performance.now();
-  const colores = [ "#FFF5BA" ,"#FBE4FF","#ACE7FF","#DBFFD6" ]; //solo 4 colores, representando las semanas
+  const colores = [ "#50C878","#90E0EF" ,"#FFDE21","#9583B6" ]; //solo 4 colores, representando las semanas
   const coloracion = {};//inicializar coloracion
   const grafo ={};
 
   for (let i = 0; i < nodes.length; i++) {//inicializar grafo
-    grafo[nodes[i].id] = [];
+    grafo[nodes[i].id] = []; 
   }
 
   for (let i = 0; i < edges.length; i++) {//llenar edges por las predefinidas
-    const source = edges[i].source;
-    const target = edges[i].target;
-    grafo[source].push(target);
-    grafo[target].push(source);
+      const source = edges[i].source;
+      const target = edges[i].target;
+      grafo[source].push(target);
+      grafo[target].push(source);
   }
 
-  for (let v = 0; v < nodes.length; v++) {
+ 
+  for (let v = 0; v <nodes.length; v++) {
     const coloresUsados = new Set();//conjunto para almacenar los colores usados por los vecinos
     const nodo = nodes[v]; 
-
     const nodoActual = grafo[nodo.id];
 
     //recorrer los vecinos del nodo actual
@@ -46,6 +45,7 @@
   return {tiempo, coloracion};
 }
 
+// module.exports = { AlgoritmoVoraz };
 export { AlgoritmoVoraz };
 
 //si esta vacio - preguntar cuando seleccione un pin si alli quiere iniciar

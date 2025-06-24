@@ -19,7 +19,7 @@ export default function ColoracionComunidad() {
     try {
       const text = await file.text();
       const grafo = parseTxtToGrafo(text);
-      const resultado = colorearGrafo(grafo, 1000);
+      const resultado = colorearGrafo(grafo);
       
       const coloresUsados = [...new Set(Object.values(resultado.colores))].length;
       const densidad = (grafo.edges.length * 2) / (grafo.nodes.length * (grafo.nodes.length - 1)) * 100;

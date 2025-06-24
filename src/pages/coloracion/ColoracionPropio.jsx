@@ -8,6 +8,9 @@ import { IoInformationCircle } from "react-icons/io5"
 import { useState } from 'react';
 import { AlgoritmoVoraz } from "@backend/voraz.js";
 import { Play } from 'lucide-react';
+import { Clock } from 'lucide-react';
+
+
 
 // Componente de fondo animado para el tutorial
 const AnimatedBackground = () => (
@@ -52,14 +55,18 @@ const createSvgPinIcon = (color) =>
         <circle cx="12" cy="10" r="4" fill="white"/>
       </svg>
     `,
-    iconSize: [30, 40],
+    iconSize: [30, 45],
     iconAnchor: [15, 48],
     popupAnchor: [0, -40],
   });
 
+// Variable global para tiempo
+let TIEMPO_GLOBAL;
+
 const coloracion = (carrera, edges) => {
   //llama a mi algoritmo 
   const colorMap = AlgoritmoVoraz(carrera, edges);
+  TIEMPO_GLOBAL = colorMap.tiempo;
   return (
     <>
       {carrera.map((gp) => (
@@ -82,9 +89,10 @@ const coloracion = (carrera, edges) => {
             <div className="text-center">
               <strong>{gp.name}</strong><br />
               <span className="text-sm text-gray-600">
-                Semana: {colorMap.coloracion[gp.id] === '#fff9c4' ? '1' : 
-                        colorMap.coloracion[gp.id] === '#fecaca' ? '2' : 
-                        colorMap.coloracion[gp.id] === '#bfdbfe' ? '3' : '4'}
+                  {colorMap.coloracion[gp.id] === '#50C878' ? 'Semana: 1' : 
+                        colorMap.coloracion[gp.id] === '#90E0EF' ? 'Semana: 2' : 
+                        colorMap.coloracion[gp.id] === '#FFDE21' ? 'Semana: 3' : 
+                        colorMap.coloracion[gp.id] == '#9583B6'?'Semana: 4': 'Circuito no habilitado hasta 2028'}
               </span>
             </div>
           </Popup>
@@ -126,19 +134,19 @@ const GraphInfo = ({ isVisible, onToggle, currentSchedule }) => (
           </p>
           <div className="grid grid-cols-2 gap-2">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full bg-yellow-200"></div>
+              <div className="w-4 h-4 rounded-full bg-green-300"></div>
               <span className="text-xs">Semana 1</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full bg-red-200"></div>
+              <div className="w-4 h-4 rounded-full bg-blue-100"></div>
               <span className="text-xs">Semana 2</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full bg-blue-200"></div>
+              <div className="w-4 h-4 rounded-full bg-yellow-200"></div>
               <span className="text-xs">Semana 3</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full bg-green-200"></div>
+              <div className="w-4 h-4 rounded-full bg-purple-200"></div>
               <span className="text-xs">Semana 4</span>
             </div>
           </div>
@@ -173,17 +181,6 @@ const InfoButton = ({ onClick }) => (
 
 //espacio izquierdo encargado de los botones
 const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) => {
-  const carreras = [
-    "Gran Premio de Australia 🇦🇺", "Gran Premio de China 🇨🇳", "Gran Premio de Japón 🇯🇵",
-    "Gran Premio de Bahrein 🇧🇭", "Gran Premio de Arabia Saudita 🇸🇦", "Gran Premio de Miami 🇺🇸",
-    "Gran Premio de Italia (Imola) 🇮🇹", "Gran Premio de Monaco 🇲🇨", "Gran Premio de España 🇪🇸",
-    "Gran Premio de Madrid 🇪🇸", "Gran Premio de Canadá 🇨🇦", "Gran Premio de Austria 🇦🇹",
-    "Gran Premio de Gran Bretaña 🇬🇧", "Gran Premio de Bélgica 🇧🇪", "Gran Premio de Hungría 🇭🇺",
-    "Gran Premio de Países Bajos 🇳🇱", "Gran Premio de Italia (Monza)🇮🇹", "Gran Premio de Azerbaiyán 🇦🇿",
-    "Gran Premio de Singapur 🇸🇬", "Gran Premio de Estados Unidos 🇺🇸", "Gran Premio de México 🇲🇽",
-    "Gran Premio de Brasil 🇧🇷", "Gran Premio de Las Vegas 🇺🇸", "Gran Premio de Qatar 🇶🇦",
-    "Gran Premio de Abu Dhabi 🇦🇪"
-  ];
   
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
@@ -204,10 +201,10 @@ const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) =>
           <div className="absolute z-20 mt-2 w-full bg-slate-800/95 backdrop-blur-lg border border-slate-600/50 rounded-xl shadow-2xl">
             <div className="p-4 space-y-3">
               {[
-                { color: 'bg-yellow-200', label: 'Semana 1', border: 'border-yellow-300' },
-                { color: 'bg-red-200', label: 'Semana 2', border: 'border-red-300' },
-                { color: 'bg-blue-200', label: 'Semana 3', border: 'border-blue-300' },
-                { color: 'bg-green-200', label: 'Semana 4', border: 'border-green-300' }
+                { color: 'bg-green-300', label: 'Semana 1', border: 'border-green-400' },
+                { color: 'bg-blue-100', label: 'Semana 2', border: 'border-blue-300' },
+                { color: 'bg-yellow-200', label: 'Semana 3', border: 'border-yellow-300' },
+                { color: 'bg-purple-200', label: 'Semana 4', border: 'border-purple-300' }
               ].map((item, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   <div className={`w-6 h-6 rounded-full ${item.color} border-2 ${item.border} shadow-sm`}></div>
@@ -232,12 +229,12 @@ const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) =>
         {isOpen && (
           <div className="absolute z-20 mt-2 w-full bg-slate-800/95 backdrop-blur-lg border border-slate-600/50 rounded-xl shadow-2xl">
             <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-700">
-              {carreras.map((gp, index) => (
+              {carrera.map((gp) => (
                 <div
-                  key={index}
+                  key={gp.id}
                   className="px-4 py-2 text-sm text-white hover:bg-orange-500/20 hover:text-orange-300 transition-colors cursor-pointer first:rounded-t-xl last:rounded-b-xl"
                 >
-                  {gp}
+                  {gp.name}
                 </div>
               ))}
             </div>
@@ -269,6 +266,22 @@ const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) =>
         <AiFillMerge className="w-5 h-5 text-orange-400 mr-3" />
         Horario Aleatorio
       </button>
+
+      {/* <div className="flex flex-col">
+        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/50 p-4 flex-1 overflow-y-auto">
+          <div className="bg-orange-500/10 rounded-lg p-3 border border-orange-500/20">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center text-orange-400">
+                <Clock size={14} className="mr-2" />
+                <span className="font-medium text-sm">Tiempo de Ejecución</span>
+              </div>
+              <span className="text-xl font-bold text-orange-300">
+                {typeof TIEMPO_GLOBAL === 'number' ? TIEMPO_GLOBAL.toFixed(4) : '--'} ms
+              </span>
+            </div>
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 };
@@ -326,6 +339,7 @@ const edges2026 = [
   { source: 22, target: 23 }, { source: 23, target: 24 },
 ];
 
+
 export default function ColoracionPropio() {
   const navigate = useNavigate();
   const [mostrarGrafo, setMostrarGrafo] = useState(false);
@@ -342,15 +356,14 @@ export default function ColoracionPropio() {
   //crear aristas random de las predifinidas
   const handleRandomAristas = () => {
     setEdges1([]);
-    const newEdges = [];
     for (let i = 0; i < 25; i++) {
       const source = Math.floor(Math.random() * carrera.length);
       const target = Math.floor(Math.random() * carrera.length);
       if (source !== target) {
-        newEdges.push({ source: carrera[source].id, target: carrera[target].id });
+        edges1.push({ source: carrera[source].id, target: carrera[target].id });
       }
     }
-    return newEdges;
+    return edges1;
   }
 
   const handleMostrar2025 = () => {
@@ -379,6 +392,7 @@ export default function ColoracionPropio() {
     setNuevoGrafo(true);
     setCurrentSchedule("Horario Aleatorio Generado");
   };
+  
 
   return (
     <div className='flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-black to-orange-500/20 text-white overflow-hidden'>
@@ -442,10 +456,10 @@ export default function ColoracionPropio() {
             
             <div className="grid grid-cols-2 gap-3 mb-6">
               {[
-                { color: 'bg-yellow-200', label: 'Semana 1' },
-                { color: 'bg-red-200', label: 'Semana 2' },
-                { color: 'bg-blue-200', label: 'Semana 3' },
-                { color: 'bg-green-200', label: 'Semana 4' }
+                { color: 'bg-green-300', label: 'Semana 1' },
+                { color: 'bg-blue-100', label: 'Semana 2' },
+                { color: 'bg-yellow-200', label: 'Semana 3' },
+                { color: 'bg-purple-200', label: 'Semana 4' }
               ].map((item, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <div className={`w-4 h-4 rounded-full ${item.color} border border-gray-400`}></div>
@@ -510,7 +524,6 @@ export default function ColoracionPropio() {
                   <Popup>
                     <div className="text-center">
                       <strong>{gp.name}</strong><br/>
-                      <span className="text-sm text-gray-600">Ubicación del circuito</span>
                     </div>
                   </Popup>
                 </Marker>

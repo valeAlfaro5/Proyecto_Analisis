@@ -16,6 +16,8 @@ const { findAllHamiltonianCycles } = require("./hamilton")
 // Middleware para parsear JSON
 app.use(express.json());
 app.use(cors())
+app.use(express.json({ limit: '20mb' })); // puedes ajustar a 20mb o más si lo necesitas
+
 
 
 
@@ -150,11 +152,6 @@ app.post('/colorar-mio', (req, res) => {
   res.json(resultado);
 });
 
-// Escuchar en el puerto
-app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
-});
-
 function isTooDense(graph) {
     const n = graph.length;
     let edgeCount = 0;
@@ -170,4 +167,11 @@ function isTooDense(graph) {
 
     return density >= 0.9; // Puedes ajustar el umbral si hace falta
 }
+
+// Escuchar en el puerto
+app.listen(port, () => {
+    console.log(`Servidor escuchando en http://localhost:${port}`);
+});
+
+
 
