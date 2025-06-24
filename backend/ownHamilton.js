@@ -1,37 +1,4 @@
-function findHamiltonianCycleCount(graph) {
-    const n = graph.length;
-    const visited = new Array(n).fill(false);
-    let count = 0;
 
-    function backtrack(curr, depth) {
-        if (depth === n) {
-            // Si hay conexión de regreso al nodo inicial, contamos ciclo
-            if (graph[curr][0] === 1) {
-                count++;
-            }
-            return;
-        }
-
-        for (let next = 1; next < n; next++) {
-            if (!visited[next] && graph[curr][next] === 1) {
-                visited[next] = true;
-                backtrack(next, depth + 1);
-                visited[next] = false;
-            }
-        }
-    }
-
-    visited[0] = true; // Empezamos desde nodo 0
-    const startTime = performance.now();
-    backtrack(0, 1);
-    const endTime = performance.now();
-
-    return {
-        count,
-        time_ms: +(endTime - startTime).toFixed(4),
-        nodes: n
-    };
-}
 
 function findNHamiltonianCycles(graph, maxSavedCycles = 5) {
     const n = graph.length;
@@ -52,6 +19,9 @@ function findNHamiltonianCycles(graph, maxSavedCycles = 5) {
         }
 
         for (let v = 0; v < n; v++) {
+            // console.log(`visitedMask: ${visitedMask.toString(2).padStart(n, '0')}`);
+            // console.log(`1 << ${v}     : ${(1 << v).toString(2).padStart(n, '0')}`);
+            // console.log(`check        : ${!(visitedMask & (1 << v))}`);
             if (!(visitedMask & (1 << v)) && graph[u][v]) {
                 path.push(v);
                 backtrack(path, visitedMask | (1 << v));
@@ -68,7 +38,7 @@ function findNHamiltonianCycles(graph, maxSavedCycles = 5) {
         nodes: n,
         totalCycles: totalCount,
         savedCycles: firstCycles.length,
-        time_ms: +(endTime - startTime).toFixed(2),
+        time_ms: +(endTime - startTime).toFixed(4),
         cycles: firstCycles,
     };
 }

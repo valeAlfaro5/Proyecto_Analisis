@@ -48,14 +48,14 @@ const F1HamiltonianUI = () => {
   };
 
   const loadDefaultMatrix = () => {
-    const matrixStr = defaultMatrix.map(row => row.join(',')).join('\n');
+    const matrixStr = defaultMatrix.map(row => row.join(' ')).join('\n');
     setMatrix(matrixStr);
     setMatrixSize(15);
   };
 
   const generateEmptyMatrix = (size) => {
     const emptyMatrix = Array(size).fill().map(() => Array(size).fill(0));
-    const matrixStr = emptyMatrix.map(row => row.join(',')).join('\n');
+    const matrixStr = emptyMatrix.map(row => row.join(' ')).join('\n');
     setMatrix(matrixStr);
   };
 
@@ -63,10 +63,10 @@ const F1HamiltonianUI = () => {
     try {
       const rows = matrixStr.trim().split('\n');
       return rows.map(row =>
-        row.split(',').map(cell => parseInt(cell.trim()))
+        row.split(' ').map(cell => parseInt(cell.trim()))
       );
     } catch (err) {
-      throw new Error('Formato de matriz inválido');
+      throw new Error('Invalid matrix format');
     }
   };
 
@@ -85,13 +85,13 @@ const F1HamiltonianUI = () => {
         // Validar que sea una matriz cuadrada
         const size = graphMatrix.length;
         if (graphMatrix.some(row => row.length !== size)) {
-          throw new Error('La matriz debe ser cuadrada');
+          throw new Error('Matrix must be square');
         }
         // Validar que solo contenga 0s y 1s
         for (let i = 0; i < size; i++) {
           for (let j = 0; j < size; j++) {
             if (graphMatrix[i][j] !== 0 && graphMatrix[i][j] !== 1) {
-              throw new Error('La matriz debe contener solo valores 0 y 1');
+              throw new Error('Matrix must contain only 0 and 1 values');
             }
           }
         }
@@ -111,7 +111,7 @@ const F1HamiltonianUI = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Error del servidor: ${response.status}`);
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
@@ -181,7 +181,7 @@ const F1HamiltonianUI = () => {
             </h1>
             <Flag className="w-12 h-12 text-red-500" />
           </div>
-          <p className="text-xl text-gray-300">Algoritmo Community - Búsqueda de Ciclos Hamiltonianos</p>
+          <p className="text-xl text-gray-300">Community Algorithm - Hamiltonian Cycles Search</p>
           <div className="w-32 h-1 bg-gradient-to-r from-red-500 via-white to-red-500 mx-auto mt-4"></div>
         </div>
 
@@ -190,7 +190,7 @@ const F1HamiltonianUI = () => {
           <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-red-500/30">
             <div className="flex items-center gap-3 mb-6">
               <Grid className="w-6 h-6 text-red-500" />
-              <h2 className="text-2xl font-bold">CONTROL DE CARRERA</h2>
+              <h2 className="text-2xl font-bold">RACE CONTROL</h2>
             </div>
 
             {/* Controles de matriz */}
@@ -200,7 +200,7 @@ const F1HamiltonianUI = () => {
                   onClick={loadDefaultMatrix}
                   className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition-colors"
                 >
-                  Cargar Circuito Por Defecto
+                  Load Default Circuit
                 </button>
                 <select
                   value={matrixSize}
@@ -212,7 +212,7 @@ const F1HamiltonianUI = () => {
                   className="px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg"
                 >
                   {[3, 4, 5, 6, 7, 8, 9, 10].map(size => (
-                    <option key={size} value={size}>Matriz {size}x{size}</option>
+                    <option key={size} value={size}>Matrix {size}x{size}</option>
                   ))}
                 </select>
               </div>
@@ -221,13 +221,13 @@ const F1HamiltonianUI = () => {
             {/* Editor de matriz */}
             <div className="mb-6">
               <label className="block text-sm font-semibold mb-2 text-gray-300">
-                MATRIZ DE ADYACENCIA (separar con comas, una fila por línea)
+                ADJACENCY MATRIX (separate with spaces, one row per line)
               </label>
               <textarea
                 value={matrix}
                 onChange={(e) => setMatrix(e.target.value)}
                 className="w-full h-40 p-3 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm resize-none focus:border-red-500 focus:outline-none"
-                placeholder="0,1,1,0,1&#10;1,0,1,1,1&#10;1,1,0,1,0&#10;0,1,1,0,1&#10;1,1,0,1,0"
+                placeholder="0 1 1 0 1&#10;1 0 1 1 1&#10;1 1 0 1 0&#10;0 1 1 0 1&#10;1 1 0 1 0"
               />
             </div>
 
@@ -246,12 +246,12 @@ const F1HamiltonianUI = () => {
               {loading ? (
                 <>
                   <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  PROCESANDO CIRCUITO...
+                  PROCESSING CIRCUIT...
                 </>
               ) : (
                 <>
                   <Play className="w-6 h-6" />
-                  INICIAR CARRERA
+                  START RACE
                 </>
               )}
             </button>
@@ -269,7 +269,7 @@ const F1HamiltonianUI = () => {
           <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-red-500/30">
             <div className="flex items-center gap-3 mb-6">
               <Trophy className="w-6 h-6 text-yellow-500" />
-              <h2 className="text-2xl font-bold">RESULTADOS DE CARRERA</h2>
+              <h2 className="text-2xl font-bold">RACE RESULTS</h2>
             </div>
 
             {results ? (
@@ -279,7 +279,7 @@ const F1HamiltonianUI = () => {
                   <div className="bg-gradient-to-r from-green-600/20 to-green-500/20 p-4 rounded-lg border border-green-500/30">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-sm text-green-300">CICLOS ENCONTRADOS</span>
+                      <span className="text-sm text-green-300">CYCLES FOUND</span>
                     </div>
                     <div className="text-3xl font-bold text-green-400">{results.totalCycles}</div>
                   </div>
@@ -287,7 +287,7 @@ const F1HamiltonianUI = () => {
                   <div className="bg-gradient-to-r from-blue-600/20 to-blue-500/20 p-4 rounded-lg border border-blue-500/30">
                     <div className="flex items-center gap-2 mb-2">
                       <Timer className="w-5 h-5 text-blue-400" />
-                      <span className="text-sm text-blue-300">TIEMPO DE EJECUCIÓN</span>
+                      <span className="text-sm text-blue-300">EXECUTION TIME</span>
                     </div>
                     <div className="text-3xl font-bold text-blue-400">{results.time_ms}ms</div>
                   </div>
@@ -296,7 +296,7 @@ const F1HamiltonianUI = () => {
                 <div className="bg-gradient-to-r from-purple-600/20 to-purple-500/20 p-4 rounded-lg border border-purple-500/30">
                   <div className="flex items-center gap-2 mb-2">
                     <Zap className="w-5 h-5 text-purple-400" />
-                    <span className="text-sm text-purple-300">NODOS EN EL CIRCUITO</span>
+                    <span className="text-sm text-purple-300">CIRCUIT NODES</span>
                   </div>
                   <div className="text-3xl font-bold text-purple-400">{results.nodes}</div>
                 </div>
@@ -307,7 +307,7 @@ const F1HamiltonianUI = () => {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-xl font-bold flex items-center gap-2">
                         <Flag className="w-5 h-5 text-yellow-500" />
-                        RUTAS HAMILTONIANAS ENCONTRADAS
+                        HAMILTONIAN ROUTES FOUND
                       </h3>
 
                       <div className="flex items-center gap-3">
@@ -315,17 +315,17 @@ const F1HamiltonianUI = () => {
                         <button
                           onClick={downloadResults}
                           className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
-                          title="Descargar resultados en JSON"
+                          title="Download results in JSON"
                         >
                           <Download className="w-4 h-4" />
-                          Descargar JSON
+                          Download JSON
                         </button>
 
                         {/* Advertencia para muchos ciclos */}
                         {results.cycles.length > 100 && !showAllCycles && (
                           <div className="text-orange-400 text-sm flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" />
-                            <span>Muchos resultados detectados</span>
+                            <span>Many results detected</span>
                           </div>
                         )}
                       </div>
@@ -336,14 +336,14 @@ const F1HamiltonianUI = () => {
                       {results.cycles.length <= 100 ? (
                         // Mostrar todos si son pocos
                         <p className="text-green-400 text-sm">
-                          ✅ Mostrando todos los {results.cycles.length} ciclos encontrados
+                          ✅ Showing all {results.cycles.length} cycles found
                         </p>
                       ) : (
                         // Controles para muchos ciclos
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <p className="text-yellow-400 text-sm">
-                              ⚠️ Se encontraron {results.cycles.length.toLocaleString()} ciclos
+                              ⚠️ Found {results.cycles.length.toLocaleString()} cycles
                             </p>
                             <button
                               onClick={() => setShowAllCycles(!showAllCycles)}
@@ -352,14 +352,14 @@ const F1HamiltonianUI = () => {
                                 : 'bg-green-600 hover:bg-green-700 text-white'
                                 }`}
                             >
-                              {showAllCycles ? 'Ocultar Lista' : 'Ver Lista Completa'}
+                              {showAllCycles ? 'Hide List' : 'View Complete List'}
                             </button>
                           </div>
 
                           {showAllCycles && (
                             <div className="flex items-center gap-4 flex-wrap">
                               <div className="flex items-center gap-2">
-                                <label className="text-sm text-gray-300">Ciclos por página:</label>
+                                <label className="text-sm text-gray-300">Cycles per page:</label>
                                 <select
                                   value={itemsPerPage}
                                   onChange={(e) => {
@@ -376,7 +376,7 @@ const F1HamiltonianUI = () => {
                               </div>
 
                               <div className="text-sm text-gray-300">
-                                Página {currentPage} de {totalPages}
+                                Page {currentPage} of {totalPages}
                                 ({((currentPage - 1) * itemsPerPage + 1).toLocaleString()} - {Math.min(currentPage * itemsPerPage, results.cycles.length).toLocaleString()})
                               </div>
                             </div>
@@ -395,7 +395,7 @@ const F1HamiltonianUI = () => {
                               <div key={displayIndex} className="bg-gray-800/50 p-3 rounded-lg border border-gray-600">
                                 <div className="flex items-center gap-2 mb-1">
                                   <span className="text-yellow-400 font-bold">#{displayIndex + 1}</span>
-                                  <span className="text-gray-400 text-sm">Ruta:</span>
+                                  <span className="text-gray-400 text-sm">Route:</span>
                                 </div>
                                 <div className="font-mono text-green-400 text-sm">
                                   {formatCycle(cycle)}
@@ -466,10 +466,10 @@ const F1HamiltonianUI = () => {
                     {results.cycles.length > 100 && !showAllCycles && (
                       <div className="text-center py-8 text-gray-400 bg-gray-800/30 rounded-lg">
                         <AlertCircle className="w-12 h-12 mx-auto mb-3 text-yellow-500" />
-                        <p className="text-lg mb-2">Lista oculta por rendimiento</p>
+                        <p className="text-lg mb-2">List hidden for performance</p>
                         <p className="text-sm">
-                          Se encontraron demasiados ciclos para mostrar todos a la vez.<br />
-                          Haz clic en "Ver Lista Completa" para explorar los resultados.
+                          Too many cycles were found to display all at once.<br />
+                          Click "View Complete List" to explore the results.
                         </p>
                       </div>
                     )}
@@ -479,8 +479,8 @@ const F1HamiltonianUI = () => {
             ) : (
               <div className="text-center py-12 text-gray-400">
                 <Flag className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p className="text-lg">Esperando datos del circuito...</p>
-                <p className="text-sm">Ingresa una matriz y presiona "INICIAR CARRERA"</p>
+                <p className="text-lg">Waiting for circuit data...</p>
+                <p className="text-sm">Enter a matrix and press "START RACE"</p>
               </div>
             )}
           </div>
