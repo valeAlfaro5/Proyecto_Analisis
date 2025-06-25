@@ -41,7 +41,7 @@
   }
 
   const fin = performance.now();
-  const tiempo = ((fin - inicio).toFixed(4)); // promedio
+  const tiempo = ((fin - inicio)); // promedio
   return {coloracion, tiempo};
 }
 
