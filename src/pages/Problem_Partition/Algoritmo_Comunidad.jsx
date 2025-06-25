@@ -1,6 +1,7 @@
 import { Play } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { partitionComponents } from "@backend/partitionAlgorithm";
 
 const componentsList = [
   { id: 1, name: "Batería", weight: 5000 },
@@ -11,26 +12,26 @@ const componentsList = [
 ];
 
 // Simulated partitionComponents function
-const partitionComponents = (components) => {
-  const totalWeight = components.reduce((sum, comp) => sum + comp.weight, 0);
-  const targetWeight = totalWeight / 2;
+// const partitionComponents = (components) => {
+//   const totalWeight = components.reduce((sum, comp) => sum + comp.weight, 0);
+//   const targetWeight = totalWeight / 2;
 
-  let left = [];
-  let right = [];
-  let leftWeight = 0;
+//   let left = [];
+//   let right = [];
+//   let leftWeight = 0;
 
-  // Simple greedy approach for demo
-  components.forEach(comp => {
-    if (leftWeight + comp.weight <= targetWeight) {
-      left.push(comp);
-      leftWeight += comp.weight;
-    } else {
-      right.push(comp);
-    }
-  });
+//   // Simple greedy approach for demo
+//   components.forEach(comp => {
+//     if (leftWeight + comp.weight <= targetWeight) {
+//       left.push(comp);
+//       leftWeight += comp.weight;
+//     } else {
+//       right.push(comp);
+//     }
+//   });
 
-  return { left, right };
-};
+//   return { left, right };
+// };
 
 function CommunityF1Balancer() {
   const [leftSide, setLeftSide] = useState([]);
