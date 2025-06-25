@@ -28,7 +28,7 @@
      if(coloracion[vecino] !== undefined) {
         coloresUsados.add(coloracion[vecino]);//si el vecino ya tiene color, agregarlo al conjunto
       }
-       let colorDisponible = "#FFF5BA";
+       let colorDisponible = "#50C878";
         for (let k = 0; k < colores.length; k++) {
           if (!coloresUsados.has(colores[k])) {
             colorDisponible = colores[k];//buscar el primer color que no esté en el conjunto de colores usados
@@ -42,11 +42,11 @@
 
   const fin = performance.now();
   const tiempo = ((fin - inicio).toFixed(4)); // promedio
-  return {tiempo, coloracion};
+  return {coloracion, tiempo};
 }
 
 // module.exports = { AlgoritmoVoraz };
-export { AlgoritmoVoraz };
+export  { AlgoritmoVoraz };
 
 //si esta vacio - preguntar cuando seleccione un pin si alli quiere iniciar
 //si no esta vacio - preguntar si quiere que ese continue

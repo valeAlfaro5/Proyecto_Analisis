@@ -6,7 +6,7 @@ import { AiOutlineTrophy, AiFillCalendar, AiFillMerge, AiOutlinePartition } from
 import { IoIosColorPalette } from "react-icons/io";
 import { IoInformationCircle } from "react-icons/io5"
 import { useState } from 'react';
-import { AlgoritmoVoraz } from "@backend/voraz.js";
+import {AlgoritmoVoraz} from '@backend/voraz.js';
 import { Play } from 'lucide-react';
 import { Clock } from 'lucide-react';
 
@@ -61,12 +61,68 @@ const createSvgPinIcon = (color) =>
   });
 
 // Variable global para tiempo
-let TIEMPO_GLOBAL;
+let TIEMPO_GLOBAL = null;
+
+//funcion para encontrar el inicio y final de un carrera
+const encontrarInicioYFinal = (edges)  =>{
+  if (!edges.length) return { inicio: null, fin: null };   // seguridad
+
+  const inicio = edges[0].source;
+  const fin = edges[edges.length - 1].target;
+
+  return { inicio, fin };
+}
+
+
+//ayuda determinar el mes y semana de los circuitos por colores
+const generarCalendario = (edges, colorMap) =>{
+  const colores = {
+    '#50C878': 1, // Semana 1
+    '#90E0EF': 2, // Semana 2
+    '#FFDE21': 3, // Semana 3
+    '#9583B6': 4, // Semana 4
+  };
+
+  let calendario = {};
+  let mes = 1;
+  const month = {
+    1: 'Enero',
+    2: 'Febrero',
+    3: 'Marzo',
+    4: 'Abril',
+    5: 'Mayo',
+    6: 'Junio',
+    7: 'Julio',
+    8: 'Agosto',
+    9: 'Septiembre',
+    10: 'Octubre',
+    11: 'Noviembre',
+    12: 'Diciembre'}
+
+  edges.forEach(({ target }) => {
+    const color = colorMap.coloracion[target];
+    const semana = colores[color];
+
+    if (semana === 1) mes++; // Solo subimos de mes si es semana 1
+
+    calendario[target] = {
+      mes: month[mes] || 'Desconocido',
+      semana: semana || '-',
+    };
+  });
+
+  return calendario;
+}
+
 
 const coloracion = (carrera, edges) => {
-  //llama a mi algoritmo 
+  //llama a mi algoritmo
+  const {inicio, fin} = encontrarInicioYFinal(edges);
   const colorMap = AlgoritmoVoraz(carrera, edges);
+  const calendario = generarCalendario(edges, colorMap);
   TIEMPO_GLOBAL = colorMap.tiempo;
+ console.log(`Tiempo de ejecución: ${colorMap.tiempo} ms`);
+  
   return (
     <>
       {carrera.map((gp) => (
@@ -89,10 +145,22 @@ const coloracion = (carrera, edges) => {
             <div className="text-center">
               <strong>{gp.name}</strong><br />
               <span className="text-sm text-gray-600">
-                  {colorMap.coloracion[gp.id] === '#50C878' ? 'Semana: 1' : 
-                        colorMap.coloracion[gp.id] === '#90E0EF' ? 'Semana: 2' : 
-                        colorMap.coloracion[gp.id] === '#FFDE21' ? 'Semana: 3' : 
-                        colorMap.coloracion[gp.id] == '#9583B6'?'Semana: 4': 'Circuito no habilitado hasta 2028'}
+                {colorMap.coloracion[gp.id] ? (
+                  <>
+                    {calendario[gp.id] ? (
+                      <div className="text-sm text-gray-600 ">
+                        Mes: {calendario[gp.id].mes}, Semana: {calendario[gp.id].semana}
+                      </div>
+                    ) : null}
+
+                    {gp.id === inicio && <div className="text-sm text-green-700 font-semibold">Primera carrera del año.</div>}
+                    {gp.id === fin && <div className="text-sm text-red-700 font-semibold">Última carrera del año.</div>}
+                  </>
+                ) : (
+                  <div className="text-sm text-gray-600">
+                    Circuito no habilitado hasta 2028
+                  </div>
+                )}
               </span>
             </div>
           </Popup>
@@ -159,7 +227,12 @@ const GraphInfo = ({ isVisible, onToggle, currentSchedule }) => (
           </div>
         )}
         
+        
         <div className="pt-2 border-t border-orange-500/30">
+        <div>
+          <h4 className="font-semibold text-orange-400 mb-2">Tiempo de Ejecución</h4>
+          <p className="text-white font-medium">{TIEMPO_GLOBAL}</p>
+        </div>
           <p className="text-xs text-gray-400 leading-relaxed">
             <strong>Algoritmo:</strong> Coloración voraz que asigna el menor color posible a cada carrera sin conflictos con carreras adyacentes.
           </p>
@@ -180,43 +253,13 @@ const InfoButton = ({ onClick }) => (
 );
 
 //espacio izquierdo encargado de los botones
-const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) => {
-  
+const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2, edges }) => {
+  const {inicio, fin} = encontrarInicioYFinal(edges);
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
 
   return (
     <div className="w-full max-w-xs space-y-4">
-      {/* Lista de Colores */}
-      <div className="relative">
-        <button 
-          className='flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-slate-800/80 backdrop-blur-lg rounded-xl hover:bg-slate-700/80 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 border border-slate-700/50' 
-          onClick={() => setIsOpen2(!isOpen2)}
-        >
-          <IoIosColorPalette className="w-5 h-5 text-orange-400 mr-3" />
-          Leyenda de Semanas
-        </button>
-
-        {isOpen2 && (
-          <div className="absolute z-20 mt-2 w-full bg-slate-800/95 backdrop-blur-lg border border-slate-600/50 rounded-xl shadow-2xl">
-            <div className="p-4 space-y-3">
-              {[
-                { color: 'bg-green-300', label: 'Semana 1', border: 'border-green-400' },
-                { color: 'bg-blue-100', label: 'Semana 2', border: 'border-blue-300' },
-                { color: 'bg-yellow-200', label: 'Semana 3', border: 'border-yellow-300' },
-                { color: 'bg-purple-200', label: 'Semana 4', border: 'border-purple-300' }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className={`w-6 h-6 rounded-full ${item.color} border-2 ${item.border} shadow-sm`}></div>
-                  <span className="text-sm text-white font-medium">{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Lista de Grandes Premios */}
+        {/* Lista de Grandes Premios */}
       <div className="relative">
         <button 
           className='flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-slate-800/80 backdrop-blur-lg rounded-xl hover:bg-slate-700/80 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 border border-slate-700/50' 
@@ -267,22 +310,32 @@ const DropdownGrandPrix = ({ onMostrarGrafo, onNuevoGrafo, onMostrarGrafo2 }) =>
         Horario Aleatorio
       </button>
 
-      {/* <div className="flex flex-col">
         <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/50 p-4 flex-1 overflow-y-auto">
           <div className="bg-orange-500/10 rounded-lg p-3 border border-orange-500/20">
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center text-orange-400">
-                <Clock size={14} className="mr-2" />
-                <span className="font-medium text-sm">Tiempo de Ejecución</span>
+                <span className="font-medium text-sm">Primera carrera del año</span>
               </div>
               <span className="text-xl font-bold text-orange-300">
-                {typeof TIEMPO_GLOBAL === 'number' ? TIEMPO_GLOBAL.toFixed(4) : '--'} ms
+                {carrera.find(gp => gp.id === inicio)?.name || 'Desconocida'}
               </span>
             </div>
           </div>
         </div>
-      </div> */}
-    </div>
+
+        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/50 p-4 flex-1 overflow-y-auto">
+          <div className="bg-orange-500/10 rounded-lg p-3 border border-orange-500/20">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center text-orange-400">
+                <span className="font-medium text-sm">Primera carrera del año</span>
+              </div>
+              <span className="text-xl font-bold text-orange-300">
+                {carrera.find(gp => gp.id === fin)?.name || 'Desconocida'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
   );
 };
 
@@ -352,16 +405,20 @@ export default function ColoracionPropio() {
   const [edges1, setEdges1] = useState([]);
   const [showGraphInfo, setShowGraphInfo] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState(null);
+  const [tiempoEjecucion, setTiempoEjecucion] = useState(null);
 
   //crear aristas random de las predifinidas
   const handleRandomAristas = () => {
     setEdges1([]);
-    for (let i = 0; i < 25; i++) {
-      const source = Math.floor(Math.random() * carrera.length);
-      const target = Math.floor(Math.random() * carrera.length);
-      if (source !== target) {
-        edges1.push({ source: carrera[source].id, target: carrera[target].id });
-      }
+    const carrerasDisponibles = [...carrera].sort(() => Math.random() - 0.5);
+    const totalCarreras = Math.min(24, carrerasDisponibles.length);
+    const carrerasSeleccionadas = carrerasDisponibles.slice(0, totalCarreras);
+
+    for (let i = 0; i < carrerasSeleccionadas.length - 1; i++) {
+      edges1.push({
+        source: carrerasSeleccionadas[i].id,
+        target: carrerasSeleccionadas[i + 1].id,
+      });
     }
     return edges1;
   }
@@ -501,6 +558,7 @@ export default function ColoracionPropio() {
               onMostrarGrafo={handleMostrar2025} 
               onMostrarGrafo2={handleMostrar2026} 
               onNuevoGrafo={handleNuevoHorario} 
+              edges={edges}
             />
           </div>
 

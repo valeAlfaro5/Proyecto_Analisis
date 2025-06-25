@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Network } from "vis-network/standalone";
 import { Link, useNavigate } from 'react-router';
-import { colorearGrafo } from "@backend/greedy.js";
+import { colorearGrafo } from "@backend/greedy";
 import { Play, Upload, Clock, Palette, Users, Zap } from "lucide-react";
 
 export default function ColoracionComunidad() {
